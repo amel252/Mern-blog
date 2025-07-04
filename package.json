@@ -1,0 +1,26 @@
+{
+    "name": "mern-blog",
+    "version": "1.0.0",
+    "description": "Projet mern Blog",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon back-end/index.js",
+        "start": "node back-end/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/amel252/Mern-blog.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/amel252/Mern-blog/issues"
+    },
+    "homepage": "https://github.com/amel252/Mern-blog#readme",
+    "dependencies": {
+        "express": "^5.1.0",
+        "nodemon": "^3.1.10"
+    }
+}
