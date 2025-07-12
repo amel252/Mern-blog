@@ -7,15 +7,21 @@ import {
     signInSuccess,
     signInFailure,
 } from "../redux/user/userSlice";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 // inscription:
 export default function SignIn() {
+    //show password lors du click
+    const [showPassword, setShowPassword]= useState(false)
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        email: "", password: ""
+    });
+    const {email, password} = formData
     const { loading, error: errorMessage } = useSelector((state) => state.user);
 
     // avec ca qu'il va nous chercher nos (succes, start, failureS)
-    const disptach = useDispatch();
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         setFormData({
@@ -83,18 +89,35 @@ export default function SignIn() {
                                 placeholder="name@company.com"
                                 id="email"
                                 // value={email}
+                                value={email}
                                 onChange={handleChange}
                             />
                         </div>
-                        <div>
+                        <div className="relative">
                             <Label value="Votre mot de passe" />
                             <TextInput
-                                type="password"
-                                placeholder="Mot de passe"
+                                type={showPassword? "text": "password"}
+                                placeholder="*********"
                                 id="password"
-                                // value={password}
+                                value={password}
                                 onChange={handleChange}
                             />
+                            {/* {showPassword ? (
+                                <AiFillEyeInvisible className="absolute right-3 bottom-3 text-xl cursor-pointer " onClick={(prevState)=>!prevState}/>
+                            ) : (
+                                    <AiFillEye className="absolute right-3 bottom-3 text-xl cursor-pointer" onClick={()=>setShowPassword((prevState)=>!prevState)} />
+                            )} */}
+                            {showPassword ? (
+                                <AiFillEyeInvisible
+                                className="absolute right-3 bottom-3 text-xl cursor-pointer"
+                                onClick={() => setShowPassword(false)}
+                                />
+                            ) : (
+                            <AiFillEye
+                            className="absolute right-3 bottom-3 text-xl cursor-pointer"
+                            onClick={() => setShowPassword(true)}
+                            />
+                            )}
                         </div>
 
                         {errorMessage && (
