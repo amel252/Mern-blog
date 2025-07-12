@@ -40,7 +40,7 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password || email === "" || password === "") {
-        next(400, "Tous les champs sont requis");
+        return next(400, "Tous les champs sont requis");
     }
     try {
         // Cherche l'utilisateur par email
@@ -70,8 +70,7 @@ export const signin = async (req, res, next) => {
                 httpOnly: true,
             })
             .json(rest);
-    } catch {
-        error;
+    } catch (error) {
+        next(error);
     }
-    next(error);
 };
