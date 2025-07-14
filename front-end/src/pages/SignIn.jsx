@@ -8,7 +8,7 @@ import {
     signInFailure,
 } from "../redux/user/userSlice";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-
+import OAuth from "../components/OAuth"
 // inscription:
 export default function SignIn() {
     //show password lors du click
@@ -32,11 +32,11 @@ export default function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.email || !formData.password) {
-            return disptach(signInFailure("Tous les champs sont requis"));
+            return dispatch(signInFailure("Tous les champs sont requis"));
         }
 
         try {
-            disptach(signInStart());
+            dispatch(signInStart());
             const res = await fetch("/api/auth/signin", {
                 method: "POST",
                 headers: {
@@ -46,15 +46,15 @@ export default function SignIn() {
             });
             const data = await res.json();
             if (data.success === false) {
-                return disptach(signInFailure(data.message));
+                return dispatch(signInFailure(data.message));
             }
 
             if (res.ok) {
-                disptach(signInSuccess(data));
+                dispatch(signInSuccess(data));
                 navigate("/");
             }
         } catch (error) {
-            disptach(signInFailure(error.message));
+            dispatch(signInFailure(error.message));
         }
     };
 
@@ -102,11 +102,6 @@ export default function SignIn() {
                                 value={password}
                                 onChange={handleChange}
                             />
-                            {/* {showPassword ? (
-                                <AiFillEyeInvisible className="absolute right-3 bottom-3 text-xl cursor-pointer " onClick={(prevState)=>!prevState}/>
-                            ) : (
-                                    <AiFillEye className="absolute right-3 bottom-3 text-xl cursor-pointer" onClick={()=>setShowPassword((prevState)=>!prevState)} />
-                            )} */}
                             {showPassword ? (
                                 <AiFillEyeInvisible
                                 className="absolute right-3 bottom-3 text-xl cursor-pointer"
@@ -141,6 +136,7 @@ export default function SignIn() {
                                     "Connexion"
                                 )}
                             </Button>
+                            <OAuth/>
                         </div>
                     </form>
 
