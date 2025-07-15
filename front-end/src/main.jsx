@@ -5,16 +5,17 @@ import "flowbite";
 import "./index.css";
 import { persistor, store } from "./redux/store.js";
 import { Provider } from "react-redux";
-import { PersistGate } from 'redux-persist/integration/react';
-
-
-
+import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")).render(
-
-    <PersistGate persistor={persistor}>
-        <Provider store={store}>
+    // <PersistGate persistor={persistor}>
+    //     <Provider store={store}>
+    //         <App />
+    //     </Provider>
+    // </PersistGate>
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
             <App />
-        </Provider>
-    </PersistGate>
+        </PersistGate>
+    </Provider>
 );
