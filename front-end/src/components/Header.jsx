@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { FaMoon, FaBars, FaTimes } from "react-icons/fa";
+import { FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+
 import { Avatar, Button } from "flowbite-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
 
 export default function Header() {
     const path = useLocation().pathname;
     const navigate = useNavigate();
     const { currentUser } = useSelector((state) => state.user);
+    const { theme } = useSelector((state) => state.theme);
     const [menuOpen, setMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const dispatch = useDispatch();
 
     return (
         <nav className="border-b-2 bg-white dark:bg-gray-900 dark:text-white">
@@ -55,15 +59,19 @@ export default function Header() {
                 {/* Right side */}
                 <div className="flex items-center gap-3 md:order-2">
                     {/* Theme toggle button */}
-                    <Button
-                        className="w-10 h-10 hidden sm:flex items-center justify-center"
-                        color="gray"
-                        pill
-                        onClick={() => alert("Toggle theme")}
-                        aria-label="toggle theme"
+
+                    {/* button dark light */}
+                    <button
+                        onClick={() => dispatch(toggleTheme())}
+                        className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                        aria-label="Toggle theme"
                     >
-                        <FaMoon />
-                    </Button>
+                        {theme === "light" ? (
+                            <FaMoon className="text-xl text-black" />
+                        ) : (
+                            <FaSun className="text-xl text-yellow-400" />
+                        )}
+                    </button>
 
                     {/* User menu or Sign In */}
                     {currentUser ? (
@@ -118,19 +126,6 @@ export default function Header() {
                             </Button>
                         </Link>
                     )}
-
-                    {/* Hamburger menu toggle */}
-                    <button
-                        className="ml-2 inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        aria-label="Toggle menu"
-                    >
-                        {menuOpen ? (
-                            <FaTimes size={24} />
-                        ) : (
-                            <FaBars size={24} />
-                        )}
-                    </button>
                 </div>
             </div>
 

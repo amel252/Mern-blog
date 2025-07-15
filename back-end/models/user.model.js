@@ -18,12 +18,12 @@ const userSchema = new mongoose.Schema(
         },
         pictureProfile: {
             type: String,
-            default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHXi6kWCo1P3qJAuOnEAs6jWS1Dg1BqRkk8Q&s"
+            default: "https://randomuser.me/api/portraits/women/29.jpg",
         },
         isAdmin: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     { timestamps: true }
 );
