@@ -54,6 +54,18 @@ export default function DashProfile() {
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setImageFileUploadProgress(progress.toFixed(0));
             },
+            // (error) => {
+            //     console.error(error.code);
+            //     if (error.code === "storage/unauthorized") {
+            //         setImageFileUploadError(
+            //             "Vous n'avez pas la permission d'uploader."
+            //         );
+            //     } else if (error.code === "storage/quota-exceeded") {
+            //         setImageFileUploadError("Quota de stockage dépassé.");
+            //     } else {
+            //         setImageFileUploadError("Erreur de téléchargement.");
+            //     }
+            // },
             (error) => {
                 setImageFileUploadError(
                     "Vous ne pouvez pas telecharger une image(Le fichier doit avoir moins de 2MB)"
