@@ -7,7 +7,7 @@ export const test = (req, res) => {
     res.json({ message: "Api valide" });
 };
 
-// Function update
+// Function update info utilisateur
 export const updateUser = async (req, res, next) => {
     // user existant
     if (req.user.id !== req.params.userId) {
@@ -78,6 +78,18 @@ export const updateUser = async (req, res, next) => {
         );
         const { password, ...rest } = updateUser._doc;
         res.status(200).json(rest);
+    } catch (error) {
+        next(error);
+    }
+};
+// function delete utilisateur
+export const deleteUser = async (req, res, next) => {
+    if (req.user.id !== req.params.userId) {
+        return next(errorHandler(403, "les données incorrectes "));
+    }
+    try {
+        await User.findByIdAndDelete(req.params.user);
+        res.status(200).json("l'utilisateur a été supprimé");
     } catch (error) {
         next(error);
     }
