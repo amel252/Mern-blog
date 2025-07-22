@@ -88,7 +88,7 @@ export const deleteUser = async (req, res, next) => {
         return next(errorHandler(403, "les données incorrectes "));
     }
     try {
-        await User.findByIdAndDelete(req.params.user);
+        await User.findByIdAndDelete(req.params.userId);
         res.status(200).json("l'utilisateur a été supprimé");
     } catch (error) {
         next(error);
