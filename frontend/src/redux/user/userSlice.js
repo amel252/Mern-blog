@@ -1,37 +1,56 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     // L'utilisateur n'existe pas encore
     currentUser: null,
     error: null,
-    loading: false
-}
+    loading: false,
+};
 
-// Création de slice 
+// Création de slice
 const userSlice = createSlice({
-    name:'user',
+    name: "user",
     initialState,
     reducers: {
         // au debut
         signInstart: (state) => {
-            state.loading =  true,
-            state.error = null
+            (state.loading = true), (state.error = null);
         },
         // resussie
         signInSuccess: (state, action) => {
             // payload parle de données de l'utilisateur
             state.currentUser = action.payload;
-            state.loading = false,
-            state.error = null
+            state.loading = false;
+            state.error = null;
         },
         // Echec
         signInFailure: (state, action) => {
             state.loading = false;
             state.error = action.payload;
-        }
-    }
-})
+        },
+        updateStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        updateSuccess: (state, action) => {
+            state.currentUser = action.payload;
+            state.loading = true;
+            state.error = null;
+        },
+        updateFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+    },
+});
 
-export const {signInstart, signInSuccess, signInFailure} = userSlice.actions;
+export const {
+    signInstart,
+    signInSuccess,
+    signInFailure,
+    updateStart,
+    updateSuccess,
+    updateFailure,
+} = userSlice.actions;
 // exporte reducer dans store.js et renome comme c'est un export default
-export default userSlice.reducer
+export default userSlice.reducer;

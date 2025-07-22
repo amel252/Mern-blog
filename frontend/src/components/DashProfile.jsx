@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { TextInput, Alert } from "flowbite-react";
 import { Button } from "flowbite-react";
 import { useState, useRef, useEffect } from "react";
@@ -11,6 +11,11 @@ import {
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { app } from "../firebase";
+import {
+    updateStart,
+    updateSuccess,
+    updateFailure,
+} from "../redux/user/userSlice";
 
 export default function DashProfile() {
     const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -20,6 +25,9 @@ export default function DashProfile() {
         useState(null);
     const [imageFileUploadError, setImageFileUploadError] = useState(null);
     const [imageFileUploading, setImageFileUploading] = useState(false);
+    const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+    const [updateUserError, setUpdateUserError] = useState(null);
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({});
 
     const filePickerRef = useRef();
@@ -31,7 +39,6 @@ export default function DashProfile() {
             setImageFileUrl(URL.createObjectURL(file));
         }
     };
-    // console.log(imageFile, imageFileUrl)
 
     useEffect(() => {
         if (imageFile) {
@@ -54,18 +61,6 @@ export default function DashProfile() {
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setImageFileUploadProgress(progress.toFixed(0));
             },
-            // (error) => {
-            //     console.error(error.code);
-            //     if (error.code === "storage/unauthorized") {
-            //         setImageFileUploadError(
-            //             "Vous n'avez pas la permission d'uploader."
-            //         );
-            //     } else if (error.code === "storage/quota-exceeded") {
-            //         setImageFileUploadError("Quota de stockage dépassé.");
-            //     } else {
-            //         setImageFileUploadError("Erreur de téléchargement.");
-            //     }
-            // },
             (error) => {
                 setImageFileUploadError(
                     "Vous ne pouvez pas telecharger une image(Le fichier doit avoir moins de 2MB)"
@@ -88,10 +83,46 @@ export default function DashProfile() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setUpdateUserError(null);
+        setUpdateUserSuccess(null);
+        if (Object.keys(formData).length === 0) {
+            setUpdateUserError("Aucun changement a été fait ");
+            return;
+        }
+        if (imageFileUploading) {
+            setUpdateUserError("veuillez attendre le chargement de l'image");
+            return;
+        }
+        try {
+            dispatch(updateStart());
+            const res = await fetch(`/api/user/update/${currentUser._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+            // si ca ne passe pas bien
+            if (!res.ok) {
+                dispatch(updateFailure(data.message));
+                setUpdateUserError(data.message);
+            } // si ca marche bien
+            else {
+                dispatch(updateSuccess(data));
+                setUpdateUserSuccess("la mise à jour du profil est effectué");
+            }
+        } catch (error) {
+            dispatch(updateFailure(error.message));
+            setUpdateUserError(error.message);
+        }
+    };
     return (
         <div className="max-w-lg mx-auto p-3 w-full">
             <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <input
                     type="file"
                     accept="image/*"
