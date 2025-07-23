@@ -24,6 +24,9 @@ import {
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFailure,
+    signOutUserStart,
+    signOutUserSuccess,
+    signOutUserFailure,
 } from "../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
@@ -156,6 +159,20 @@ export default function DashProfile() {
             );
         }
     };
+    const handleSignOut = async () => {
+        try {
+            dispatch(signOutUserStart());
+            const res = await fetch("./api/auth/signout");
+            const data = await res.json();
+            if (data.success === false) {
+                dispatch(signOutUserFailure(data.message));
+                return;
+            }
+            dispatch(signOutUserSuccess(data.message));
+        } catch (error) {
+            dispatch(signOutUserFailure(error.message));
+        }
+    };
     return (
         <div className="max-w-lg mx-auto p-3 w-full">
             <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -256,7 +273,9 @@ export default function DashProfile() {
                 >
                     Supprimer le compte
                 </span>
-                <span className="cursor-pointer">Déconnexion</span>
+                <span onClick={handleSignOut} className="cursor-pointer">
+                    Déconnexion
+                </span>
             </div>
             {updateUserSuccess && (
                 <Alert color="success" className="mt-5">

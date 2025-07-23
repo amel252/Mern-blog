@@ -54,6 +54,18 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        signOutUserStart: (state) => {
+            state.loading = true;
+        },
+        signOutUserSuccess: (state) => {
+            state.currentUser = null;
+            state.loading = false;
+            state.error = null;
+        },
+        signOutUserFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
     },
 });
 
@@ -67,6 +79,9 @@ export const {
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFailure,
+    signOutUserStart,
+    signOutUserSuccess,
+    signOutUserFailure,
 } = userSlice.actions;
 // exporte reducer dans store.js et renome comme c'est un export default
 export default userSlice.reducer;
