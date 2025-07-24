@@ -5,6 +5,12 @@ import { FaMoon, FaBars, FaTimes, FaSun } from "react-icons/fa";
 import { Avatar, Button } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import {
+    signOutUserStart,
+    signOutUserSuccess,
+    signOutUserFailure,
+} from "../redux/user/userSlice";
+// onClick={(handleSignOut) => {setUserMenuOpen(false);}}
 
 export default function Header() {
     const path = useLocation().pathname;
@@ -15,6 +21,21 @@ export default function Header() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const dispatch = useDispatch();
 
+    // déconnexion
+    const handleSignOut = async () => {
+        try {
+            dispatch(signOutUserStart());
+            const res = await fetch("./api/auth/signout");
+            const data = await res.json();
+            if (data.success === false) {
+                dispatch(signOutUserFailure(data.message));
+                return;
+            }
+            dispatch(signOutUserSuccess(data.message));
+        } catch (error) {
+            dispatch(signOutUserFailure(error.message));
+        }
+    };
     return (
         <nav className="border-b-2 bg-white dark:bg-gray-900 dark:text-white">
             <div className="container mx-auto flex items-center justify-between p-4">
@@ -102,10 +123,7 @@ export default function Header() {
                                         Profil
                                     </button>
                                     <button
-                                        onClick={() => {
-                                            alert("Déconnexion");
-                                            setUserMenuOpen(false);
-                                        }}
+                                        onClick={handleSignOut}
                                         className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                                     >
                                         Déconnexion

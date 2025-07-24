@@ -40,7 +40,7 @@ export default function DashProfile() {
         useState(null);
     const [imageFileUploadError, setImageFileUploadError] = useState(null);
     const [imageFileUploading, setImageFileUploading] = useState(false);
-    const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+    const [updateSuccessMsg, setUpdateSuccessMsg] = useState(null);
     const [updateUserError, setUpdateUserError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
@@ -95,14 +95,14 @@ export default function DashProfile() {
             }
         );
     };
-
+    // update image profil
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setUpdateUserError(null);
-        setUpdateUserSuccess(null);
+        setUpdateSuccessMsg(null);
         if (Object.keys(formData).length === 0) {
             setUpdateUserError("Aucun changement a été fait ");
             return;
@@ -128,13 +128,14 @@ export default function DashProfile() {
             } // si ca marche bien
             else {
                 dispatch(updateUserSuccess(data));
-                setUpdateUserSuccess("la mise à jour du profil est effectuée");
+                setUpdateSuccessMsg("la mise à jour du profil est effectuée");
             }
         } catch (error) {
             dispatch(updateUserFailure(error.message));
             setUpdateUserError(error.message);
         }
     };
+    // delete utilisateur
     const handleDeleteUser = async () => {
         setShowModal(false);
         try {
@@ -159,6 +160,7 @@ export default function DashProfile() {
             );
         }
     };
+    // déconnexion
     const handleSignOut = async () => {
         try {
             dispatch(signOutUserStart());
@@ -277,9 +279,9 @@ export default function DashProfile() {
                     Déconnexion
                 </span>
             </div>
-            {updateUserSuccess && (
+            {updateSuccessMsg && (
                 <Alert color="success" className="mt-5">
-                    {updateUserSuccess}
+                    {updateSuccessMsg}
                 </Alert>
             )}
             {updateUserError && (
@@ -309,7 +311,7 @@ export default function DashProfile() {
                             Vous etes sur de supprimer votre compte ?
                         </h3>
                         <div className="flex justify-center gap-4">
-                            <Button color="gailure" onClick={handleDeleteUser}>
+                            <Button color="failure" onClick={handleDeleteUser}>
                                 oui , je suis sur
                             </Button>
                             <Button

@@ -54,6 +54,7 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        // en cas de déconnexion start et failure sont pas important on peux les supprimé
         signOutUserStart: (state) => {
             state.loading = true;
         },
