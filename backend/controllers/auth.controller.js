@@ -60,7 +60,7 @@ export const signin = async (req, res, next) => {
 
         // Création du token JWT
         const token = jwt.sign(
-            { id: validUser._id }, // payload
+            { id: validUser._id, isAdmin: validUser.isAdmin }, // payload
             process.env.JWT_SECRET // clé secrète à stocker dans .env
         );
         //remove password
