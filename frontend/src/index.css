@@ -1,23 +1,24 @@
- /* @import "flowbite/dist/flowbite.css"; */
+/* @import "flowbite/dist/flowbite.css"; */
 /* @import "flowbite"; */
-@import 'flowbite/dist/flowbite.css';
+@import "flowbite/dist/flowbite.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-
+.ql-editor {
+    height: 240px;
+    overflow-y: auto;
+}
 
 button[aria-label="Open main menu"],
 button[aria-label="Close main menu"] {
-  position: relative;
-  overflow: hidden;
-  width: 40px; /* ou la largeur de ton bouton */
-  height: 40px; /* idem */
-  text-indent: -9999px; /* cache le texte */
-  white-space: nowrap;
-  border: none;
-  background: none;
-  padding: 0;
+    position: relative;
+    overflow: hidden;
+    width: 40px; /* ou la largeur de ton bouton */
+    height: 40px; /* idem */
+    text-indent: -9999px; /* cache le texte */
+    white-space: nowrap;
+    border: none;
+    background: none;
+    padding: 0;
 }
