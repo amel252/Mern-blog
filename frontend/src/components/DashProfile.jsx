@@ -79,7 +79,7 @@ export default function DashProfile() {
             },
             (error) => {
                 setImageFileUploadError(
-                    "Vous ne pouvez pas telecharger une image(Le fichier doit avoir moins de 2MB)"
+                    "Vous ne pouvez pas télécharger une image(Le fichier doit avoir moins de 2MB)"
                 );
                 setImageFileUploadProgress(null);
                 setImageFile(null);
