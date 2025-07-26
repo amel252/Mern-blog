@@ -142,6 +142,7 @@ import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 
 // elements importés depuis dashProfile
 import {
@@ -160,11 +161,17 @@ export default function CreatePost() {
     const [imageUploadProgress, setImageUploadProgress] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
     const [formData, setFormData] = useState({});
+    const [publishError, setPublishError] = useState(null);
+    const navigate = useNavigate();
 
     const handleUploadImage = async () => {
         try {
             if (!file) {
                 setImageUploadError("Selectionner une image svp");
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                setImageUploadError("Le fichier doit faire moins de 2MB.");
                 return;
             }
             setImageUploadError(null);
@@ -202,11 +209,35 @@ export default function CreatePost() {
             console.log(error);
         }
     };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch(`api/post/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                setPublishError(data.message);
+                return;
+            }
+            if (res.ok) {
+                setPublishError(null);
+                navigate(`/post/${data.slug}`);
+            }
+        } catch (error) {
+            setPublishError("Erreur est survenue");
+            console.log(error);
+        }
+    };
 
     return (
         <div className="min-h-screen p-3 mx-auto max-w-3xl">
             <h1 className="text-center text-3xl my-7">Créer un article</h1>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 sm:flex-row justify-between">
                     <TextInput
                         type="text"
@@ -214,8 +245,18 @@ export default function CreatePost() {
                         required
                         id="title"
                         className="flex-1"
+                        onChange={(e) =>
+                            setFormData({ ...formData, title: e.target.value })
+                        }
                     />
-                    <Select>
+                    <Select
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                category: e.target.value,
+                            })
+                        } // ✅ à la place de "title"
+                    >
                         <option value="uncategorized">
                             Selectionner une categorie
                         </option>
@@ -235,7 +276,7 @@ export default function CreatePost() {
                     />
                     <Button
                         onClick={handleUploadImage}
-                        disabled={imageUploadProgress}
+                        disabled={!!imageUploadProgress}
                         color="blue"
                         type="button"
                     >
@@ -266,16 +307,23 @@ export default function CreatePost() {
                  className="h-72 mb-12" 
                  />  */}
                 <ReactQuill
-                    theme="snow"
-                    value={content}
-                    onChange={setContent}
-                    placeholder="Écris quelque chose..."
-                    className="h-72 mb-12"
+                    value={formData.content || ""}
+                    onChange={(value) =>
+                        setFormData((prev) => ({
+                            ...prev,
+                            content: value,
+                        }))
+                    }
                 />
 
                 <Button color="blue" type="submit">
                     Publier
                 </Button>
+                {publishError && (
+                    <Alert className="mt-5" color="failure">
+                        {publishError}
+                    </Alert>
+                )}
             </form>
         </div>
     );
