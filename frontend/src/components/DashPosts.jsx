@@ -8,13 +8,14 @@ import {
     TableBody,
     TableRow,
     TableCell,
+    Button,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 export default function DashPosts() {
     const { currentUser } = useSelector((state) => state.user);
     const [userPosts, setUserPosts] = useState([]);
-    console.log(userPosts);
+    const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
         const getUserPosts = async () => {
@@ -25,6 +26,9 @@ export default function DashPosts() {
                 const data = await res.json();
                 if (res.ok) {
                     setUserPosts(data.posts);
+                    if (data.post.lengt < 9) {
+                        setShowMore(false);
+                    }
                 }
             } catch (error) {
                 console.error("Erreur lors du chargement des posts :", error);
@@ -35,6 +39,26 @@ export default function DashPosts() {
             getUserPosts();
         }
     }, [currentUser]);
+
+    const handleShowMore = async () => {
+        const startIndex = userPosts.length;
+        try {
+            const res = await fetch(
+                `/api/post/getposts?userid=${currentUser._id}&startIndex=${startIndex}`
+            );
+            const data = await res.json();
+            // si tout est ok
+            if (res.ok) {
+                // on prend l'ancienne version et on rajoute les modif
+                setUserPosts((prev) => [...prev, ...data.posts]);
+                if (data.posts.length < 9) {
+                    setShowMore(false);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-slate-700 dark:scrollbar-thumb-slate-500">
@@ -92,6 +116,14 @@ export default function DashPosts() {
                             </TableBody>
                         ))}
                     </Table>
+                    {showMore && (
+                        <button
+                            className="w-full text-teal-500 self-center text-sm py-7"
+                            onClick={handleShowMore}
+                        >
+                            Affiche +{" "}
+                        </button>
+                    )}
                 </>
             ) : (
                 <p>Vous n'avez pas d'articles </p>
