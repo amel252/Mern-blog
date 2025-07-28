@@ -73,3 +73,25 @@ export const getPosts = async (req, res, next) => {
         });
     } catch (error) {}
 };
+export const deletePost = async (req, res, next) => {
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+        // return next(
+        //     errorHandler(403, "vous n'etes pas autorisé de supprimer l'article")
+        // );
+        return res.status(403).json({
+            message: "Vous n'êtes pas autorisé à supprimer cet article",
+        });
+    }
+    try {
+        await Post.findByIdAndDelete(req.params.postId);
+        res.status(200).json({
+            message: "L'article a été supprimé avec succès",
+        });
+    } catch (error) {
+        // next(error);
+        console.error("Erreur serveur lors de la suppression :", error);
+        return res.status(500).json({
+            message: "Erreur serveur lors de la suppression",
+        });
+    }
+};
