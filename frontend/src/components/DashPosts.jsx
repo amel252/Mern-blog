@@ -18,6 +18,8 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DashPosts() {
     const { currentUser } = useSelector((state) => state.user);
+    console.log(currentUser);
+
     const [userPosts, setUserPosts] = useState([]);
     const [showMore, setShowMore] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -95,12 +97,14 @@ export default function DashPosts() {
                 <>
                     <Table hoverable className="shadow-md">
                         <TableHead>
-                            <TableHeadCell>Date </TableHeadCell>
-                            <TableHeadCell>Image</TableHeadCell>
-                            <TableHeadCell>Titre</TableHeadCell>
-                            <TableHeadCell>Catégorie</TableHeadCell>
-                            <TableHeadCell>Supprimer</TableHeadCell>
-                            <TableHeadCell>Éditer</TableHeadCell>
+                            <TableRow>
+                                <TableHeadCell>Date </TableHeadCell>
+                                <TableHeadCell>Image</TableHeadCell>
+                                <TableHeadCell>Titre</TableHeadCell>
+                                <TableHeadCell>Catégorie</TableHeadCell>
+                                <TableHeadCell>Supprimer</TableHeadCell>
+                                <TableHeadCell>Éditer</TableHeadCell>
+                            </TableRow>
                         </TableHead>
                         {userPosts.map((post) => (
                             <TableBody className="divide-y" key={post._id}>
@@ -142,7 +146,7 @@ export default function DashPosts() {
                                     <TableCell>
                                         <Link
                                             className="text-teal-500 hover:underline"
-                                            to={`/update/post/${post._id}`}
+                                            to={`/update-post/${post._id}`}
                                         >
                                             <span>Editer</span>
                                         </Link>
