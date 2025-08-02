@@ -1,8 +1,13 @@
 import { Sidebar, SidebarItem, SidebarItemGroup } from "flowbite-react";
-import { HiArrowSmRight, HiUser, HiDocumentText } from "react-icons/hi";
+import {
+    HiArrowSmRight,
+    HiUser,
+    HiDocumentText,
+    HiOutlineUserGroup,
+} from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import DashProfile from "./DashProfile";
+
 import {
     signOutUserStart,
     signOutUserSuccess,
@@ -29,7 +34,7 @@ export default function DashSidebar() {
     const handleSignOut = async () => {
         try {
             dispatch(signOutUserStart());
-            const res = await fetch("./api/auth/signout");
+            const res = await fetch("/api/auth/signout");
             const data = await res.json();
             if (data.success === false) {
                 dispatch(signOutUserFailure(data.message));
@@ -54,21 +59,30 @@ export default function DashSidebar() {
                     Profile
                 </SidebarItem>
                 {currentUser.isAdmin && (
-                    <Link to="/dashboard?tab=posts">
-                        <SidebarItem
-                            active={tab === "posts"}
-                            icon={HiDocumentText}
-                            as="div"
-                        >
-                            Posts
-                        </SidebarItem>
-                    </Link>
+                    <SidebarItem
+                        as={Link}
+                        to="/dashboard?tab=posts"
+                        active={tab === "posts"}
+                        icon={HiDocumentText}
+                    >
+                        Articles
+                    </SidebarItem>
                 )}
-
+                {currentUser.isAdmin && (
+                    <SidebarItem
+                        as={Link}
+                        to="/dashboard?tab=users"
+                        icon={HiOutlineUserGroup}
+                        active={tab === "users"}
+                    >
+                        utilisateurs
+                    </SidebarItem>
+                )}
                 <SidebarItem
                     icon={HiArrowSmRight}
                     className="cursor-pointer"
                     onClick={handleSignOut}
+                    role="button"
                 >
                     Déconnexion
                 </SidebarItem>

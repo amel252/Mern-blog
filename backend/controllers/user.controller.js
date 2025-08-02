@@ -1,10 +1,9 @@
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/errors.js";
-import user from "../models/user.model.js";
 import User from "../models/user.model.js";
 
 export const test = (req, res) => {
-    res.json({ message: "Api valide" });
+    res.status(200).json({ message: "API valide" });
 };
 
 // Function update info utilisateur
@@ -35,13 +34,13 @@ export const updateUser = async (req, res, next) => {
             return next(
                 errorHandler(
                     400,
-                    "le nom de l'utilisateur doit contenir moins de 20 caractéres"
+                    "le nom de l'utilisateur doit contenir entre 7 et 20 caractères."
                 )
             );
         }
     }
     // si usename contient un espace
-    if (req.body.username.includes(" ")) {
+    if (req.body.username && req.body.username.includes(" ")) {
         return next(
             errorHandler(
                 400,
@@ -64,7 +63,7 @@ export const updateUser = async (req, res, next) => {
         );
     }
     try {
-        const updateUser = await User.findByIdAndUpdate(
+        const updatedUser = await User.findByIdAndUpdate(
             req.params.userId,
             {
                 $set: {
@@ -76,7 +75,7 @@ export const updateUser = async (req, res, next) => {
             },
             { new: true }
         );
-        const { password, ...rest } = updateUser._doc;
+        const { password, ...rest } = updatedUser._doc;
         res.status(200).json(rest);
     } catch (error) {
         next(error);
@@ -135,6 +134,6 @@ export const getUsers = async (req, res, next) => {
             lastMonthUsers,
         });
     } catch (error) {
-        next();
+        next(error);
     }
 };

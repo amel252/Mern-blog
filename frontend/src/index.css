@@ -22,3 +22,15 @@ button[aria-label="Close main menu"] {
     background: none;
     padding: 0;
 }
+
+/* remove the scrollbar(google chrome) / */
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
+/* remove the scrollbar(firefox):  */
+
+/* html {
+  scroll-width:none;
+} */

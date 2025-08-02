@@ -86,6 +86,10 @@ export default function UpdatePost() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("formData at submit:", formData); // <== debug
+        // if (!formData.category) {
+        //     setPublishError("Veuillez choisir une catégorie.");
+        //     return;
+        // }
         if (!formData._id) {
             setPublishError("Missing post ID.");
             return;
@@ -146,7 +150,7 @@ export default function UpdatePost() {
                                 category: e.target.value,
                             })
                         }
-                        value={formData.category || "uncategorized"}
+                        value={formData.category || ""}
                     >
                         <option value="uncategorized">Select a category</option>
                         <option value="javascript">Javascript</option>
@@ -155,7 +159,7 @@ export default function UpdatePost() {
                     </Select>
                 </div>
                 <div
-                    className="flex gap-4 items-center justify-between 
+                    className="flex gap-4 items-center justify-between
               border-4 border-teal-500 border-dotted p-3"
                 >
                     <FileInput
@@ -204,7 +208,7 @@ export default function UpdatePost() {
                     }}
                 />
                 <Button type="submit" gradientduotone="purpleToPink">
-                    Update post
+                    mettre à jour
                 </Button>
                 {publishError && (
                     <Alert className="mt-5" color="failure">
