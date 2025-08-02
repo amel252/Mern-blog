@@ -144,4 +144,3 @@ export const getUsers = async (req, res, next) => {
         next(error);
     }
 };
-// function de suppression de l'user dans dashboard

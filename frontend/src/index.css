@@ -34,3 +34,25 @@ html::-webkit-scrollbar {
 /* html {
   scroll-width:none;
 } */
+
+/* a utiliser plus tard  */
+.post-content p {
+    margin-bottom: 0.5rem;
+}
+
+.post-content h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: "sans-serif";
+    margin: 1.5rem 0;
+}
+.post-content h2 {
+    font-size: 1.4rem;
+    font-family: "sans-serif";
+    margin: 1.5rem 0;
+}
+
+em {
+    color: crimson;
+    cursor: pointer;
+}
