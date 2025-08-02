@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/errors.js";
 import User from "../models/user.model.js";
 
+// fonction de test
 export const test = (req, res) => {
     res.status(200).json({ message: "API valide" });
 };
@@ -81,10 +82,15 @@ export const updateUser = async (req, res, next) => {
         next(error);
     }
 };
-// function delete utilisateur
+// ---------------function delete utilisateur
 export const deleteUser = async (req, res, next) => {
-    if (req.user.id !== req.params.userId) {
-        return next(errorHandler(403, "les données incorrectes "));
+    if (!req.user.isAdmin && req.user._id !== req.params.userId) {
+        return next(
+            errorHandler(
+                403,
+                "vous n'ets pas autorisé a supprimer l'utilisateur "
+            )
+        );
     }
     try {
         await User.findByIdAndDelete(req.params.userId);
@@ -94,7 +100,8 @@ export const deleteUser = async (req, res, next) => {
     }
 };
 
-//
+//-------------------------------------------------------------------------------------
+// function pour récupérer les utilisateurs
 export const getUsers = async (req, res, next) => {
     if (!req.user.isAdmin) {
         return next(
@@ -137,3 +144,4 @@ export const getUsers = async (req, res, next) => {
         next(error);
     }
 };
+// function de suppression de l'user dans dashboard

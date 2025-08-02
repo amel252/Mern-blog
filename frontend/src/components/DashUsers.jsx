@@ -62,7 +62,7 @@ export default function DashUsers() {
             console.log(error);
         }
     };
-    // supp user
+    // supp user dans dashboard
     const handleDeleteUser = async () => {
         setShowModal(false);
         try {
@@ -78,11 +78,14 @@ export default function DashUsers() {
                 setUsers((prev) =>
                     prev.filter((user) => user._id !== userIdToDelete)
                 );
+                setShowModal(false);
             }
         } catch (error) {
             console.error("Erreur lors de la suppression :", error);
         }
     };
+
+    // affichage
     return (
         <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
             {currentUser?.isAdmin && users.length > 0 ? (

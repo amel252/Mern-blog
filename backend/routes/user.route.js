@@ -11,7 +11,8 @@ const router = express.Router();
 
 router.get("/test", test);
 router.put("/update/:userId", verifyToken, updateUser);
+// cette route permet de supp user et supp user dans dashboard
 router.delete("/delete/:userId", verifyToken, deleteUser);
 router.get("/getusers", verifyToken, getUsers);
-// router.delete("/getusers", verifyToken, getUsers);
+
 export default router;
