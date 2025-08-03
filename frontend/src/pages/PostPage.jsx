@@ -1,13 +1,14 @@
 // import { FaDribbble } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Spinner } from "flowbite-react";
+import { Spinner, Button } from "flowbite-react";
+import CallToAction from "../components/CallToAction";
 
 export default function PostPage() {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [postSlug] = useParams();
+    const { postSlug } = useParams();
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -59,16 +60,19 @@ export default function PostPage() {
                 src={post && post.image}
                 alt={post && post.title}
             />
-            <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl">
+            <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
                 <span>
                     {post && new Date(post.createdAt).toLocaleDateString()}
                 </span>
                 <span>
-                    {post && (post.content.length / 1000).toFixed(0)}mins
+                    {post && (post.content.length / 1000).toFixed(0)} mins de
                     lecture
                 </span>
             </div>
             <div className="p-3 mx-auto max-w-2xl w-full post-content dangerouslySetInnerHTML={{_html:post && post.content}} "></div>
+            <div className="max-w-4xl mx-auto w-full">
+                <CallToAction />
+            </div>
         </main>
     );
 }
