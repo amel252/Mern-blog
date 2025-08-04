@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Spinner, Button } from "flowbite-react";
 import CallToAction from "../components/CallToAction";
+import CommentSection from "../components/commentSection";
 
 export default function PostPage() {
     const [post, setPost] = useState(null);
@@ -51,7 +52,12 @@ export default function PostPage() {
                 className="self-center mt-5"
                 to={`/search?category=${post && post.category}`}
             >
-                <Button color="gray" pill size="xs">
+                <Button
+                    className="mx-auto w-full sm:w-fit px-6 py-3 text-lg font-semibold"
+                    color="gray"
+                    pill
+                    size="xs"
+                >
                     {post && post.category}
                 </Button>
             </Link>
@@ -73,6 +79,7 @@ export default function PostPage() {
             <div className="max-w-4xl mx-auto w-full">
                 <CallToAction />
             </div>
+            <CommentSection postId={post._id} />
         </main>
     );
 }
