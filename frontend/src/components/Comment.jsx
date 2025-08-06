@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { FaThumbsUp } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Button } from "flowbite-react";
 
-export default function Comment({ comment }) {
+export default function Comment({ comment, onLike }) {
     const [user, setUser] = useState({});
+    const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
         const getUser = async () => {
@@ -13,10 +17,7 @@ export default function Comment({ comment }) {
                     setUser(data);
                 }
             } catch (error) {
-                console.error(
-                    "Erreur lors du chargement de l'utilisateur :",
-                    error
-                );
+                console.log(error.message);
             }
         };
         getUser();
@@ -33,7 +34,7 @@ export default function Comment({ comment }) {
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center mb-1">
-                        <span className="fornt-bold mr-1 text-xs truncate">
+                        <span className="font-bold mr-1 text-xs truncate">
                             {user ? `@${user.username}` : "Utilisateur anonyme"}
                         </span>
                         <span className="text-gray-500 text-xs">
@@ -41,6 +42,28 @@ export default function Comment({ comment }) {
                         </span>
                     </div>
                     <p className="text-gray-500 pb-2">{comment.content}</p>
+                    <div
+                        className="flex items-center pt-2 text-xs border-t
+                    dark:border-gray-700 max-w-fit gap-2"
+                    >
+                        <Button
+                            onClick={() => onLike(comment._id)}
+                            type="button"
+                            className={`text-gray-400 hover:text-blue-500 ${
+                                currentUser &&
+                                comment.likes.includes(currentUser._id) &&
+                                "!text-blue-500"
+                            }`}
+                        >
+                            <FaThumbsUp />
+                        </Button>
+                        {comment.numberOfLikes > 0 &&
+                            comment.numberOfLikes +
+                                "" +
+                                (comment.numberOfLikes === 1
+                                    ? "like"
+                                    : "likes")}
+                    </div>
                 </div>
             </div>
         </>

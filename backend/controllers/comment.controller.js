@@ -31,3 +31,52 @@ export const getPostComments = async (req, res, next) => {
         next(error);
     }
 };
+// mettre like au post
+export const likeComment = async (req, res, next) => {
+    try {
+        // récup d'un comment a partir de son id
+        const comment = await Comment.findById(req.params.commentId);
+        // si le comment n'existe pas
+        if (!comment) {
+            return next(errorHandler(404, "Commentaire non trouvé"));
+        }
+        // récup de l'index de user qui a liké le post
+        const userIndex = comment.likes.indexOf(req.user.id);
+        if (userIndex === -1) {
+            comment.numberOfLikes + 1;
+            comment.likes.push(req.user.id);
+        } else {
+            comment.numberOfLikes - +1;
+            comment.likes.splice(userIndex, 1);
+        }
+        await comment.save();
+        res.status(200).json(comment);
+    } catch (error) {
+        next(error);
+    }
+};
+// export const likeComment = async (req, res, next) => {
+//     try {
+//         const comment = await Comment.findById(req.params.commentId);
+//         if (!comment) {
+//             return next(errorHandler(404, "Commentaire non trouvé"));
+//         }
+
+//         const userIndex = comment.likes.indexOf(req.user.id);
+
+//         if (userIndex === -1) {
+//             comment.likes.push(req.user.id);
+//         } else {
+//             comment.likes.splice(userIndex, 1);
+//         }
+
+//         // si tu veux conserver `numberOfLikes`, mets-le à jour comme ça :
+//         comment.numberOfLikes = comment.likes.length;
+
+//         await comment.save();
+
+//         res.status(200).json(comment);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
