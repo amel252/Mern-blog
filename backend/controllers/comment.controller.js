@@ -80,3 +80,25 @@ export const likeComment = async (req, res, next) => {
 //         next(error);
 //     }
 // };
+// function de modif du commentaire :
+export const editComment = async (req, res, next) => {
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+        if (!comment) {
+            return next(
+                errorHandler(404),
+                "Vous n'etes pas permis d'éditer ce commentaire"
+            );
+        }
+        const editComment = await Comment.findByIdAndUpdate(
+            req.params.commentId,
+            {
+                comment: req.body.comment,
+            },
+            { new: true }
+        );
+        res.status(200).json(editComment);
+    } catch (error) {
+        next(error);
+    }
+};
