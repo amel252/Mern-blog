@@ -55,32 +55,7 @@ export const likeComment = async (req, res, next) => {
         next(error);
     }
 };
-// export const likeComment = async (req, res, next) => {
-//     try {
-//         const comment = await Comment.findById(req.params.commentId);
-//         if (!comment) {
-//             return next(errorHandler(404, "Commentaire non trouvé"));
-//         }
-
-//         const userIndex = comment.likes.indexOf(req.user.id);
-
-//         if (userIndex === -1) {
-//             comment.likes.push(req.user.id);
-//         } else {
-//             comment.likes.splice(userIndex, 1);
-//         }
-
-//         // si tu veux conserver `numberOfLikes`, mets-le à jour comme ça :
-//         comment.numberOfLikes = comment.likes.length;
-
-//         await comment.save();
-
-//         res.status(200).json(comment);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-// function de modif du commentaire :
+// function update Commentaire
 export const editComment = async (req, res, next) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
@@ -90,14 +65,44 @@ export const editComment = async (req, res, next) => {
                 "Vous n'etes pas permis d'éditer ce commentaire"
             );
         }
-        const editComment = await Comment.findByIdAndUpdate(
+        // 🔒 Autorisation : seul l'auteur ou un admin peut modifier
+        if (
+            comment.userId.toString() !== req.user.id && // req.user.id fourni par middleware d'auth
+            !req.user.isAdmin
+        ) {
+            return next(
+                errorHandler(403, "Non autorisé à éditer ce commentaire")
+            );
+        }
+        const updateComment = await Comment.findByIdAndUpdate(
             req.params.commentId,
             {
-                comment: req.body.comment,
+                comment: req.body.content,
             },
             { new: true }
         );
-        res.status(200).json(editComment);
+        res.status(200).json(updateComment);
+    } catch (error) {
+        next(error);
+    }
+};
+// function suppression comment
+export const deletComment = async (req, res, next) => {
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+        if (!comment) {
+            return next(errorHandler(404), "Commentaire non trouvé");
+        }
+        if (comment.userId !== req.user.id && !req.user.isAdmin) {
+            return next(
+                errorHandler(
+                    403,
+                    "vous n'etes pas permis de supprimer ce commentaire "
+                )
+            );
+        }
+        await Comment.findByIdAndDelete(req.params.commentId);
+        res.status(200).json("le commentaire a été supprimé");
     } catch (error) {
         next(error);
     }
