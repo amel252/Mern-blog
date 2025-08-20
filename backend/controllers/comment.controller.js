@@ -1,12 +1,11 @@
 import { errorHandler } from "../utils/errors.js";
 import Comment from "../models/comment.model.js";
-
 export const createComment = async (req, res, next) => {
     try {
         const { content, postId, userId } = req.body;
         if (userId !== req.user.id) {
             return next(
-                errorHandler(403, "Vous n'avez pas l'autorisation de commenter")
+                errorHandler(403, "You are not allowed to create this comment")
             );
         }
         const newComment = new Comment({
@@ -20,33 +19,31 @@ export const createComment = async (req, res, next) => {
         next(error);
     }
 };
-// récuperer les commentaires
+
 export const getPostComments = async (req, res, next) => {
     try {
         const comments = await Comment.find({ postId: req.params.postId }).sort(
-            { createdAt: -1 }
+            {
+                createdAt: -1,
+            }
         );
         res.status(200).json(comments);
     } catch (error) {
         next(error);
     }
 };
-// mettre like au post
 export const likeComment = async (req, res, next) => {
     try {
-        // récup d'un comment a partir de son id
         const comment = await Comment.findById(req.params.commentId);
-        // si le comment n'existe pas
         if (!comment) {
-            return next(errorHandler(404, "Commentaire non trouvé"));
+            return next(errorHandler(404, "Comment not found"));
         }
-        // récup de l'index de user qui a liké le post
         const userIndex = comment.likes.indexOf(req.user.id);
         if (userIndex === -1) {
-            comment.numberOfLikes + 1;
+            comment.numberOfLikes += 1;
             comment.likes.push(req.user.id);
         } else {
-            comment.numberOfLikes - +1;
+            comment.numberOfLikes -= 1;
             comment.likes.splice(userIndex, 1);
         }
         await comment.save();
@@ -55,55 +52,106 @@ export const likeComment = async (req, res, next) => {
         next(error);
     }
 };
-// function update Commentaire
 export const editComment = async (req, res, next) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
         if (!comment) {
             return next(
-                errorHandler(404),
-                "Vous n'etes pas permis d'éditer ce commentaire"
+                errorHandler(404, "You are not allowed to edit this comment")
             );
         }
-        // 🔒 Autorisation : seul l'auteur ou un admin peut modifier
-        if (
-            comment.userId.toString() !== req.user.id && // req.user.id fourni par middleware d'auth
-            !req.user.isAdmin
-        ) {
-            return next(
-                errorHandler(403, "Non autorisé à éditer ce commentaire")
-            );
-        }
-        const updateComment = await Comment.findByIdAndUpdate(
+        const editedComment = await Comment.findByIdAndUpdate(
             req.params.commentId,
             {
-                comment: req.body.content,
+                content: req.body.content,
             },
             { new: true }
         );
-        res.status(200).json(updateComment);
+        res.status(200).json(editedComment);
     } catch (error) {
         next(error);
     }
 };
-// function suppression comment
-export const deletComment = async (req, res, next) => {
+
+export const deleteComment = async (req, res, next) => {
     try {
         const comment = await Comment.findById(req.params.commentId);
         if (!comment) {
-            return next(errorHandler(404), "Commentaire non trouvé");
+            return next(errorHandler(404, "Comment not found"));
         }
         if (comment.userId !== req.user.id && !req.user.isAdmin) {
             return next(
-                errorHandler(
-                    403,
-                    "vous n'etes pas permis de supprimer ce commentaire "
-                )
+                errorHandler(403, "You are not allowed to delete this comment")
             );
         }
         await Comment.findByIdAndDelete(req.params.commentId);
-        res.status(200).json("le commentaire a été supprimé");
+        res.status(200).json("Comment has been deleted");
     } catch (error) {
         next(error);
     }
+};
+// export const getComments = async (req, res, next) => {
+//     if (!req.user.isAdmin)
+//         return next(
+//             errorHandler(403, "You are not allowed to get all comments")
+//         );
+//     try {
+//         const startIndex = parseInt(req.query.startIndex) || 0;
+//         const limit = parseInt(req.query.limit) || 9;
+//         const sortDirection = req.query.sort === "desc" ? -1 : 1;
+//         const comments = await Comment.find()
+//             .sort({ createdAt: sortDirection })
+//             .skip(startIndex)
+//             .limit(limit);
+//         const totalComments = await Comment.countDocuments();
+//         const now = new Date();
+//         const oneMonthAgo = new Date(
+//             now.getFullYear(),
+//             now.getMonth() - 1,
+//             now.getDate()
+//         );
+//         const lastMonthComments = await Comment.countDocuments({
+//             createdAt: { $gte: oneMonthAgo },
+//         });
+//         res.status(200).json({ comments, totalComments, lastMonthComments });
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+// récupérer les commentaires  et afficher sur le dashboard :
+export const getComments = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+        return next(
+            errorHandler(
+                403,
+                "Vous n'etes pas permis d'acceder au ncommentaires"
+            )
+        );
+    }
+    try {
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const limit = parseInt(req.query.limit) || 9;
+        const sortDirection = req.query.sort === "desc" ? -1 : 1;
+        const comments = await Comment.find()
+            .sort({
+                createdAt: sortDirection,
+            })
+            .skip(startIndex)
+            .limit(limit);
+        // tous les commentaires
+        const totalComments = await Comment.countDocuments();
+        // la date actuelle
+        const now = new Date();
+        // récupere l'année et le mois et la date , ce que'on a besoin
+        const oneMonthAgo = new Date(
+            now.getFullYear(),
+            now.getMonth() - 1,
+            now.getDate()
+        );
+        // tenir compte du last Comment
+        const lastMonthComments = await Comment.countDocuments({
+            createdAt: { $gte: oneMonthAgo },
+        });
+        res.status(200).json({ comments, totalComments, lastMonthComments });
+    } catch (error) {}
 };
