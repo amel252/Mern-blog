@@ -4,6 +4,7 @@ import {
     HiUser,
     HiDocumentText,
     HiOutlineUserGroup,
+    HiAnnotation,
 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -76,6 +77,16 @@ export default function DashSidebar() {
                         active={tab === "users"}
                     >
                         utilisateurs
+                    </SidebarItem>
+                )}
+                {currentUser.isAdmin && (
+                    <SidebarItem
+                        as={Link}
+                        to="/dashboard?tab=comments"
+                        icon={HiAnnotation}
+                        active={tab === "comments"}
+                    >
+                        commentaires
                     </SidebarItem>
                 )}
                 <SidebarItem
