@@ -26,7 +26,12 @@ export default {
     ],
     darkMode: "class",
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                primary: "#1d4ed8",
+                secondary: "#9333ea",
+            },
+        },
     },
     plugins: [require("flowbite/plugin")],
 };
