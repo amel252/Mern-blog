@@ -3,9 +3,10 @@ import {
     HiArrowSmRight,
     HiUser,
     HiDocumentText,
-    HiOutlineUserGroup,
     HiAnnotation,
+    HiChartPie,
 } from "react-icons/hi";
+import { HiUserGroup } from "react-icons/hi2";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -49,6 +50,16 @@ export default function DashSidebar() {
     return (
         <Sidebar className="w-full md:w-56">
             <SidebarItemGroup>
+                {currentUser.isAdmin && (
+                    <SidebarItem
+                        as={Link}
+                        to="/dashboard?tab=dash"
+                        active={tab === "dash" || !tab}
+                        icon={HiChartPie}
+                    >
+                        Dashboard
+                    </SidebarItem>
+                )}
                 <SidebarItem
                     as={Link}
                     to="/dashboard?tab=profile"
@@ -73,7 +84,7 @@ export default function DashSidebar() {
                     <SidebarItem
                         as={Link}
                         to="/dashboard?tab=users"
-                        icon={HiOutlineUserGroup}
+                        icon={HiUserGroup}
                         active={tab === "users"}
                     >
                         utilisateurs

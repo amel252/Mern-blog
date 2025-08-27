@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-    HiAnnotation,
-    HiArrowNarrowUp,
-    HiDocumentText,
-    HiOutileGroup,
-} from "react-icons/hi";
+import { HiAnnotation, HiArrowNarrowUp, HiDocumentText } from "react-icons/hi";
+import { HiUserGroup } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import {
     Table,
@@ -82,12 +78,12 @@ export default function DashboardComponents() {
 
     return (
         <div className="p-3 md:mx-auto">
-            <div className="flex-wrap flew gap-4 justify-center">
+            <div className="flex-wrap flex gap-4 justify-center">
+                {/* 1er bloc */}
                 <div
                     className="flex flex-col p-3 dark:bg-slate-800
                 gap-4 md:w-72 w-full rounded-md shadow-md"
                 >
-                    {/* 1er div */}
                     <div className="flex justify-between">
                         <div className="">
                             <h3 className="text-gray-500 text-md uppercase">
@@ -95,7 +91,7 @@ export default function DashboardComponents() {
                             </h3>
                             <p className="text-2xl">{totalUsers}</p>
                         </div>
-                        <HiOutileGroup className="bg-teal-600 text-white rounded-full text-5xl p-3 shadow-lg" />
+                        <HiUserGroup className="bg-teal-600 text-white rounded-full text-5xl p-3 shadow-lg" />
                     </div>
                     <div className="flex gap-2 text-sm">
                         <span className="text-green-500 flex items-center">
@@ -105,8 +101,8 @@ export default function DashboardComponents() {
                         <div className="text-gray-500">Dernier Mois</div>
                     </div>
                 </div>
-                {/* 2eme div */}
-                <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-full rounded-md shadow-md ">
+                {/* 2eme bloc */}
+                <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 rounded-md shadow-md ">
                     <div className="flex justify-between">
                         <div className="">
                             <h3 className="text-gray-500 text-md uppercase">
@@ -124,7 +120,7 @@ export default function DashboardComponents() {
                         <div className="text-gray-500">Mois dernier</div>
                     </div>
                 </div>
-                {/*  3eme div*/}
+                {/*  3eme bloc */}
                 <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md">
                     <div className="flex justify-between">
                         <div className="">
@@ -133,7 +129,8 @@ export default function DashboardComponents() {
                             </h3>
                             <p className="text-2xl">{totalPosts}</p>
                         </div>
-                        <HiDocumentText className="bg-lin-600 text-white rounded-3xl text-5xl p-3 shadow-lg" />
+                        <HiDocumentText className="bg-indigo-600 text-white rounded-full text-5xl p-3 shadow-lg" />
+                        {/* <HiDocumentText className="bg-lin-600 text-white rounded-3xl text-5xl p-3 shadow-lg" /> */}
                     </div>
                     <div className="flex gap-2 text-sm">
                         <span className="text-green-500 flex items-center">
@@ -144,6 +141,7 @@ export default function DashboardComponents() {
                     </div>
                 </div>
             </div>
+
             {/* section 1 */}
             <div className="flex flex-wrap gap-4 py-3 mx-auto justify-center">
                 {/* ----------------------- */}
@@ -209,7 +207,7 @@ export default function DashboardComponents() {
                                                 className="w-10 h-10 rounded-full bg-gray-500"
                                             />
                                         </TableCell>
-                                        <TableCell>{user.usename}</TableCell>
+                                        <TableCell>{user.username}</TableCell>
                                     </TableRow>
                                 </TableBody>
                             ))}

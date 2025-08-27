@@ -18,13 +18,33 @@
 // };
 // tailwind.config.js
 
-/** @type {import('tailwindcss').Config} */
+// /** @type {import('tailwindcss').Config} */
+// export default {
+//     content: [
+//         "./src/**/*.{js,jsx,ts,tsx}",
+//         "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+//     ],
+//     darkMode: "class",
+//     theme: {
+//         extend: {
+//             colors: {
+//                 primary: "#1d4ed8",
+//                 secondary: "#9333ea",
+//             },
+//         },
+//     },
+//     plugins: [require("flowbite/plugin")],
+// };
+
+import flowbite from "flowbite-react/plugin";
+
 export default {
+    darkMode: "class",
     content: [
-        "./src/**/*.{js,jsx,ts,tsx}",
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}",
         "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
     ],
-    darkMode: "class",
     theme: {
         extend: {
             colors: {
@@ -33,5 +53,5 @@ export default {
             },
         },
     },
-    plugins: [require("flowbite/plugin")],
+    plugins: [flowbite],
 };
