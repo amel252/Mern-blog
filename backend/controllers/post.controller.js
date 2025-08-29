@@ -34,7 +34,7 @@ export const getPosts = async (req, res, next) => {
         // Si on a un postId dans la query, on récupère juste ce post précis
         if (req.query.postId) {
             // Vérifier que l'ID est valide
-            if (!mongoose.Types.ObjectId.isValid) {
+            if (!mongoose.Types.ObjectId.isValid(req.query.postId)) {
                 return next(errorHandler(400, " ID de l'article invalide"));
             }
             const post = await Post.findById(req.query.postId);
@@ -126,47 +126,7 @@ export const deletePost = async (req, res, next) => {
         next(error);
     }
 };
-//
-// export const updatePost = async (req, res, next) => {
-//     console.log("postId:", req.params.postId);
-//     console.log("userId:", req.params.userId);
 
-//     const { postId, userId } = req.params;
-
-//     if (!mongoose.Types.ObjectId.isValid(postId)) {
-//         return next(errorHandler(400, "ID de l'article invalide"));
-//     }
-//     //
-//     if (!req.user.isAdmin && req.user.id !== userId) {
-//         return next(
-//             errorHandler(
-//                 403,
-//                 " vous n'avez pas le droit de supprimer cet article "
-//             )
-//         );
-//     }
-
-//     try {
-//         const updatedPost = await Post.findByIdAndUpdate(
-//             postId,
-//             {
-//                 $set: {
-//                     title: req.body.title,
-//                     content: req.body.content,
-//                     category: req.body.category,
-//                     image: req.body.image,
-//                 },
-//             },
-//             { new: true }
-//         );
-//         if (!updatedPost) {
-//             return next(errorHandler(404, "Article non trouvé"));
-//         }
-//         res.status(200).json(updatedPost);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
 export const updatePost = async (req, res, next) => {
     console.log("postId:", req.params.postId);
     console.log("userId:", req.params.userId);
@@ -174,14 +134,15 @@ export const updatePost = async (req, res, next) => {
     const { postId, userId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(postId)) {
-        return next(errorHandler(400, "Invalid post ID"));
+        return next(errorHandler(400, "ID de l'article invalide"));
     }
 
-    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    if (!req.user.isAdmin && req.user.id !== req.params.userId) {
         return next(
-            errorHandler(403, "You are not allowed to update this post")
+            errorHandler(403, "Vous n'êtes pas autorisé à modifier cet article")
         );
     }
+
     try {
         const updatedPost = await Post.findByIdAndUpdate(
             //  req.params.postId,
@@ -196,6 +157,9 @@ export const updatePost = async (req, res, next) => {
             },
             { new: true }
         );
+        if (!updatedPost) {
+            return next(errorHandler(404, "Article non trouvé"));
+        }
         res.status(200).json(updatedPost);
     } catch (error) {
         next(error);

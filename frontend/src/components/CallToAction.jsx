@@ -12,16 +12,16 @@ export default function CallToAction() {
                     Découvre une liste de 100 projets pratiques pour maîtriser
                     JavaScript.
                 </p>
-                <Button
-                    as="a"
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    gradientDuoTone="purpleToPink"
+                <button className="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600 transition-colors">
+                    100 Projets JavaScript
+                </button>
+                {/* <Button
                     className="mx-auto w-fit"
+                    as="a"
+                    gradientDuoTone="purpleToPink"
                 >
                     100 Projets JavaScript
-                </Button>
+                </Button> */}
             </div>
 
             {/* Image */}

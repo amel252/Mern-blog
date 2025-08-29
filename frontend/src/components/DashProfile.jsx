@@ -164,7 +164,7 @@ export default function DashProfile() {
     const handleSignOut = async () => {
         try {
             dispatch(signOutUserStart());
-            const res = await fetch("./api/auth/signout");
+            const res = await fetch("/api/auth/signout");
             const data = await res.json();
             if (data.success === false) {
                 dispatch(signOutUserFailure(data.message));
@@ -258,9 +258,10 @@ export default function DashProfile() {
 
                 {currentUser.isAdmin && (
                     <Link to={"/create-post"}>
+                        {/* revoir l'affichage de mon button  */}
                         <Button
                             type="button"
-                            gradientduotone="purpleToPink"
+                            gradientDuoTone="purpleToPink"
                             className="w-full"
                         >
                             Create a post
